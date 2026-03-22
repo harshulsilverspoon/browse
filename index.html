@@ -21,7 +21,10 @@
             background: #4CAF50; color: white;
             border-radius: 5px; cursor: pointer;
         }
-        #uv-frame { width: 100vw; height: 100vh; border: none; margin-top: 50px; }
+        #browse-frame { 
+            width: 100vw; height: calc(100vh - 60px); 
+            border: none; margin-top: 60px; 
+        }
     </style>
 </head>
 <body>
@@ -29,18 +32,11 @@
         <input type="text" id="url-input" placeholder="Enter URL (e.g. google.com)" />
         <button id="go-btn">Go</button>
     </div>
-    <iframe id="uv-frame"></iframe>
+    <iframe id="browse-frame"></iframe>
 
-    <script src="uv/uv.bundle.js"></script>
-    <script src="uv/uv.config.js"></script>
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('uv/uv.sw.js', {
-                scope: __uv$config.prefix
-            });
-        }
-
-        const frame = document.getElementById('uv-frame');
+        const PROXY = 'https://bare-proxy-production.up.railway.app/';
+        const frame = document.getElementById('browse-frame');
         const input = document.getElementById('url-input');
         const btn = document.getElementById('go-btn');
 
@@ -48,7 +44,7 @@
             let url = input.value.trim();
             if (!url) return;
             if (!url.match(/^https?:\/\//)) url = 'https://' + url;
-            frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+            frame.src = PROXY + '?url=' + encodeURIComponent(url);
         }
 
         btn.addEventListener('click', go);
